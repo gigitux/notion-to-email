@@ -2,7 +2,8 @@ use lettre::message::header::ContentType;
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::transport::smtp::response::{Code, Response};
 use lettre::transport::smtp::Error;
-use lettre::{Message, SmtpTransport};
+
+use lettre::{Message, SmtpTransport, Transport};
 
 pub struct EmailContent {
     pub subject: String,
@@ -56,7 +57,6 @@ pub fn send_email(
             vec!["Email sent".to_string()],
         ))
     }
-
     #[cfg(not(debug_assertions))]
     {
         mailer.send(&email)

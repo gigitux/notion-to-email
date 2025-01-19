@@ -66,11 +66,15 @@ async fn main() {
     let link = &notion_object.properties.url.url;
     let article = parse_link(link).await;
 
+    let article_with_original_link = article
+        .html
+        .map(|html| format!("{}\n\n <a href={}>Check the original link </a>", html, link));
+
     let email_content = EmailContent {
         email_from,
         email_to,
         subject: article.title.unwrap_or("No title found".to_string()),
-        body: article.html.unwrap_or("No content found".to_string()),
+        body: article_with_original_link.unwrap_or("No content found".to_string()),
         smtp_server,
     };
 
