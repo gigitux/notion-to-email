@@ -1,27 +1,64 @@
 use lettre::message::header::ContentType;
 use lettre::transport::smtp::authentication::Credentials;
-use lettre::{Message, SmtpTransport, Transport};
+use lettre::transport::smtp::response::{Code, Response};
+use lettre::transport::smtp::Error;
+use lettre::{Message, SmtpTransport};
 
-pub fn send_email(username: &str, password: &str, to: &str) {
+pub struct EmailContent {
+    pub subject: String,
+    pub body: String,
+    pub email_from: String,
+    pub email_to: String,
+    pub smtp_server: String,
+}
+
+pub fn send_email(
+    username: &str,
+    password: &str,
+    email_content: EmailContent,
+) -> Result<Response, Error> {
+    let EmailContent {
+        subject,
+        body,
+        email_from,
+        email_to,
+        smtp_server,
+    } = email_content;
+    let from_address = format!("Notion To Email Bot <{}>", email_from);
+
+    #[allow(unused_variables)] // This variable is used only in production build
     let email = Message::builder()
-        .from("Notion To Email Bot <bot@gmail.com>".parse().unwrap())
-        .to(to.parse().unwrap())
-        .subject("Happy new year")
-        .header(ContentType::TEXT_PLAIN)
-        .body(String::from("Be happy!"))
+        .from(from_address.parse().unwrap())
+        .to(email_to.parse().unwrap())
+        .subject(subject)
+        .header(ContentType::TEXT_HTML)
+        .body(body)
         .unwrap();
 
     let creds = Credentials::new(username.to_string(), password.to_string());
 
     // Open a remote connection to gmail
-    let mailer = SmtpTransport::relay("smtp.gmail.com")
+    #[allow(unused_variables)] // This variable is used only in production build
+    let mailer = SmtpTransport::relay(&smtp_server)
         .unwrap()
         .credentials(creds)
         .build();
 
-    // Send the email
-    match mailer.send(&email) {
-        Ok(_) => println!("Email sent successfully!"),
-        Err(e) => panic!("Could not send email: {e:?}"),
+    #[cfg(debug_assertions)]
+    {
+        println!("Email is sent");
+        Ok(Response::new(
+            Code::new(
+                lettre::transport::smtp::response::Severity::PositiveCompletion,
+                lettre::transport::smtp::response::Category::Information,
+                lettre::transport::smtp::response::Detail::Eight,
+            ),
+            vec!["Email sent".to_string()],
+        ))
+    }
+
+    #[cfg(not(debug_assertions))]
+    {
+        mailer.send(&email)
     }
 }
