@@ -23,10 +23,9 @@ jobs:
         env:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-          SMTP_HOSTNAME: ${{ secrets.SMTP_HOSTNAME }}
-          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
           SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-          SMTP_FROM: ${{ secrets.SMTP_FROM }}
-          SMTP_TO: ${{ secrets.SMTP_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: cargo run --verbose
