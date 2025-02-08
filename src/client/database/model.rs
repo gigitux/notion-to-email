@@ -29,7 +29,7 @@ pub struct Result {
     #[serde(rename = "in_trash")]
     pub in_trash: bool,
     pub properties: Properties,
-    pub url: String,
+    pub url: Option<String>,
     #[serde(rename = "public_url")]
     pub public_url: Value,
 }
@@ -72,7 +72,7 @@ pub struct Url {
     pub id: String,
     #[serde(rename = "type")]
     pub type_field: String,
-    pub url: String,
+    pub url: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

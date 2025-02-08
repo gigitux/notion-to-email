@@ -63,7 +63,7 @@ async fn main() {
     let number_of_links = database_response.results.len();
     let random_index = generate_random_index(number_of_links);
     let notion_object = &database_response.results[random_index];
-    let link = &notion_object.properties.url.url;
+    let link = notion_object.properties.url.url.as_ref().unwrap();
     let article = parse_link(link).await;
 
     let article_with_original_link = article
