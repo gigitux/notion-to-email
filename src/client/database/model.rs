@@ -64,6 +64,16 @@ pub struct Properties {
     pub url: Url,
     #[serde(rename = "Name")]
     pub name: Name,
+    #[serde(rename = "Read Status")]
+    pub read_status: ReadStatus,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ReadStatus {
+    #[serde(rename = "type")]
+    pub type_field: String,
+    pub checkbox: bool,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

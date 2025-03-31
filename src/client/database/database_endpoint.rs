@@ -1,4 +1,5 @@
 use reqwest::Client;
+use serde_json;
 
 use super::model::DatabaseResponse;
 
@@ -14,10 +15,16 @@ impl DatabaseEndpoint {
         Self { client, url }
     }
 
-    pub async fn get(&self, database_id: &str) -> Result<DatabaseResponse, reqwest::Error> {
+    pub async fn get(
+        &self,
+        filter: &serde_json::Value,
+        database_id: &str,
+    ) -> Result<DatabaseResponse, reqwest::Error> {
         let endpoint = format!("{}/{}/query", self.url, database_id);
+
         self.client
             .post(endpoint.as_str())
+            .json(&filter)
             .send()
             .await?
             .json()

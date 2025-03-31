@@ -54,9 +54,18 @@ async fn main() {
 
     let notion_client = NotionClient::new(&api_key);
 
+    let filter = serde_json::json!({
+        "filter": {
+            "property": "Read Status",
+            "checkbox": {
+                "equals": false
+            }
+        }
+    });
+
     let database_response = notion_client
         .database
-        .get(database_id.as_str())
+        .get(&filter, database_id.as_str())
         .await
         .unwrap();
 
